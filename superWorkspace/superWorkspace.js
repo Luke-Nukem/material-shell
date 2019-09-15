@@ -5,7 +5,6 @@ const Background = imports.ui.background;
 
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { MaximizeLayout } = Me.imports.tilingManager.tilingLayouts.maximize;
-const TopPanel = Me.imports.widget.topPanelWidget.TopPanel;
 const { debounce } = Me.imports.utils.index;
 const WindowUtils = Me.imports.utils.windows;
 
@@ -203,7 +202,7 @@ var SuperWorkspace = class SuperWorkspace {
             this.tilingLayout.constructor.key
         );
 
-        this.superWorkspaceManager.tilingIcon.gicon = this.tilingLayout.icon;
+        global.superWorkspaceManager.tilingIcon.gicon = this.tilingLayout.icon;
         this.tilingLayout.onTile();
     }
 

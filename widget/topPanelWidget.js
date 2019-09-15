@@ -3,7 +3,6 @@ const { GObject, St, Clutter, Gio } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { MatButton } = Me.imports.widget.material.button;
-const { WorkspaceList } = Me.imports.widget.workspaceList;
 
 /* exported TopPanel */
 var TopPanel = GObject.registerClass(
@@ -37,26 +36,6 @@ var TopPanel = GObject.registerClass(
 
             this._leftContainer.add_child(this.addButton);
             this.add_child(this._leftContainer);
-
-            this.tilingIcon = new St.Icon({
-                gicon: superWorkspace.tilingLayout.icon,
-                style_class: 'workspace-icon'
-            });
-
-            this.tilingButton = new MatButton({
-                child: this.tilingIcon,
-                style_class: 'workspace-button',
-                reactive: true,
-                can_focus: true,
-                track_hover: true
-            });
-
-            this.tilingButton.connect('clicked', (actor, button) => {
-                // Go in reverse direction on right click (button: 3)
-                superWorkspace.nextTiling(button === 3 ? -1 : 1);
-            });
-
-            this.add_child(this.tilingButton);
         }
 
         vfunc_allocate(box, flags) {

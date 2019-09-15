@@ -61,25 +61,6 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
             })
         });
 
-        this.legacyPanelGhost = Main.overview._panelGhost;
-        this.legacyPanelGhostIndex = Main.overview._overview
-            .get_children()
-            .indexOf(this.legacyPanelGhost);
-
-        this.myPanelGhost = new St.Bin({
-            child: new Clutter.Clone({
-                source: this.topBarSpacer
-            }),
-            reactive: false,
-            opacity: 0
-        });
-
-        Main.overview._overview.remove_child(this.legacyPanelGhost);
-        Main.overview._overview.insert_child_at_index(
-            this.myPanelGhost,
-            this.legacyPanelGhostIndex
-        );
-
         this.overrideWindowManagerFunctions();
 
         this.signals.push({
@@ -93,7 +74,8 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                     this.currentSuperWorkspace = newSuperWorkspace;
                     this.currentSuperWorkspace.uiVisible = true;
                     this.currentSuperWorkspace.updateUI();
-                    //this.workspaceManager.tilingIcon.gicon = this.currentSuperWorkspace.tilingLayout.icon;
+                    global.superWorkspaceManager.tilingIcon.gicon =
+                        this.currentSuperWorkspace.tilingLayout.icon;
                 }
             )
         });
@@ -134,15 +116,8 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
             signal.from.disconnect(signal.id);
         });
         this.signals = [];
-        this.topBarSpacer.destroy();
         global.superWorkspaceManager.destroy();
         delete global.superWorkspaceManager;
-
-        Main.overview._overview.remove_child(this.myPanelGhost);
-        Main.overview._overview.insert_child_at_index(
-            this.legacyPanelGhost,
-            this.legacyPanelGhostIndex
-        );
 
         this.restoreWindowManagersFunctions();
 

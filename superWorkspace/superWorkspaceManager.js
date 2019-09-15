@@ -189,7 +189,6 @@ var SuperWorkspaceManager = class SuperWorkspaceManager {
         let activeSuperWorkspace = this.getActiveSuperWorkspace();
         activeSuperWorkspace.uiVisible = true;
         activeSuperWorkspace.updateUI();
-        //this.tilingIcon.gicon = this.getActiveSuperWorkspace().tilingLayout.icon;
     }
 
     getActiveSuperWorkspace() {
