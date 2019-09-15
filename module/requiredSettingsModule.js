@@ -6,6 +6,9 @@ const { getSettings } = Me.imports.utils.settings;
 /* exported RequiredSettingsModule */
 var RequiredSettingsModule = class RequiredSettingsModule {
     constructor() {
+      this.switcherSettings = new Gio.Settings({
+        schema: 'org.gnome.shell.app-switcher',
+      });
         this.mutterSettings = new Gio.Settings({
             schema_id: 'org.gnome.mutter',
         });
@@ -38,6 +41,7 @@ var RequiredSettingsModule = class RequiredSettingsModule {
     }
 
     enable() {
+      this.switcherSettings.set_boolean('current-workspace-only', true);
         this.signals = [];
         this.settingsToForce.forEach(settingToForce => {
             let setting = new Gio.Settings({
@@ -101,6 +105,7 @@ var RequiredSettingsModule = class RequiredSettingsModule {
     }
 
     disable() {
+      this.switcherSettings.set_boolean('current-workspace-only', false);
         this.signals.forEach(signal => {
             signal.from.disconnect(signal.signalId);
         });
