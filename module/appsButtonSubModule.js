@@ -3,7 +3,7 @@ const Gio = imports.gi.Gio;
 const Main = imports.ui.main;
 
 const Me = imports.misc.extensionUtils.getCurrentExtension();
-const { MatButton } = Me.imports.widget.material.button;
+const { MatButton } = Me.imports.widget.button;
 const { ShellVersionMatch } = Me.imports.utils.compatibility;
 
 /* exported AppsButtonSubModule */

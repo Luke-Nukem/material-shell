@@ -4,7 +4,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Tweener = imports.ui.tweener;
 const DND = imports.ui.dnd;
 const Me = ExtensionUtils.getCurrentExtension();
-const { MatButton } = Me.imports.widget.material.button;
+const { MatButton } = Me.imports.widget.button;
 const { WorkspaceCategories } = Me.imports.superWorkspace.workspaceCategories;
 const { ShellVersionMatch } = Me.imports.utils.compatibility;
 
@@ -56,9 +56,7 @@ var WorkspaceList = GObject.registerClass(
 
             this.superWorkspaceManager = superWorkspaceManager;
 
-            this.buttonList = new St.BoxLayout({
-                vertical: false
-            });
+            this.buttonList = new St.BoxLayout({ });
 
             this.connect('destroy', this._onDestroy.bind(this));
 

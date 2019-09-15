@@ -1,8 +1,5 @@
-const { Clutter, GObject, St, Shell, Gio } = imports.gi;
-const Params = imports.misc.params;
+const { Clutter, GObject, St } = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
-const { Stack } = Me.imports.widget.layout;
-const { RippleBackground } = Me.imports.widget.material.rippleBackground;
 /* exported MatButton */
 var MatButton = GObject.registerClass(
     {
@@ -14,13 +11,11 @@ var MatButton = GObject.registerClass(
     },
     class MatButton extends St.Widget {
         _init(params = {}) {
-            this.rippleBackground = new RippleBackground();
             this.actorContainer = new St.Bin(params);
             super._init({
                 reactive: true
             });
 
-            this.add_child(this.rippleBackground);
             this.add_child(this.actorContainer);
             this.add_style_class_name('mat-button');
 

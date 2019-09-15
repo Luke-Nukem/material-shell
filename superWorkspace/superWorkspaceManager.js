@@ -4,7 +4,7 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { WorkspaceCategories } = Me.imports.superWorkspace.workspaceCategories;
 const { SuperWorkspace } = Me.imports.superWorkspace.superWorkspace;
 const { WorkspaceList } = Me.imports.widget.workspaceList;
-const { MatButton } = Me.imports.widget.material.button;
+const { MatButton } = Me.imports.widget.button;
 
 /* exported SuperWorkspaceManager */
 var SuperWorkspaceManager = class SuperWorkspaceManager {
