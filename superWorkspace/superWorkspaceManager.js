@@ -1,4 +1,4 @@
-const { Shell, Meta, St } = imports.gi;
+const { Clutter, Shell, Meta, St, Gio } = imports.gi;
 const Main = imports.ui.main;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { WorkspaceCategories } = Me.imports.superWorkspace.workspaceCategories;
@@ -55,9 +55,37 @@ var SuperWorkspaceManager = class SuperWorkspaceManager {
 
         activeSuperWorkspace.uiVisible = true;
 
+        ////// Add panel buttons //////
         this.workspaceList = new WorkspaceList(this);
         Main.panel._leftBox.insert_child_at_index(this.workspaceList, 1);
 
+        // reveal background with app card
+        this.addButtonIcon = new St.Icon({
+            gicon: Gio.icon_new_for_string(
+                `${Me.path}/assets/icons/plus-symbolic.svg`
+            ),
+            style_class: 'workspace-icon'
+        });
+
+        /*this.addButton = new MatButton({
+            child: this.addButtonIcon,
+            style_class: 'workspace-button',
+        });
+
+        this.addButton.connect('clicked', () => {
+            let ws = this.getActiveSuperWorkspace();
+            if (!ws.bgShown) {
+                ws.revealBackground();
+                ws.bgShown = true;
+            } else {
+                ws.unRevealBackground();
+                ws.bgShown = false;
+            }
+            ws.updateUI();
+        });
+        Main.panel._leftBox.insert_child_at_index(this.addButton, 2);*/
+
+        // tiling button
         this.tilingIcon = new St.Icon({
             gicon: this.getActiveSuperWorkspace().tilingLayout.icon,
             style_class: 'workspace-icon'

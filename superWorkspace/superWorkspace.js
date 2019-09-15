@@ -1,4 +1,4 @@
-const { Clutter, GLib, St, Meta } = imports.gi;
+const { Clutter, GLib, St } = imports.gi;
 const Signals = imports.signals;
 const Main = imports.ui.main;
 const Background = imports.ui.background;
@@ -27,6 +27,7 @@ var SuperWorkspace = class SuperWorkspace {
         this.category = category;
         this.monitor = monitor;
         this.apps = apps;
+        this.bgShown = false;
         this.monitorIsPrimary =
         monitor.index === Main.layoutManager.primaryIndex;
         this.windows = [];
@@ -66,7 +67,6 @@ var SuperWorkspace = class SuperWorkspace {
             // Since the St.Bin take the size of the AppCard the bug is invisible...
             children: [new St.Bin({ child: this.categorizedAppCard })]
         });
-
         this.backgroundContainer.add_child(this.backgroundStackLayout);
 
         this.windowFocused = null;
@@ -207,6 +207,51 @@ var SuperWorkspace = class SuperWorkspace {
     updateUI() {
         this.frontendContainer.visible = this.uiVisible;
         this.backgroundContainer.visible = this.uiVisible;
+    }
+
+    revealBackground() {
+      if (!this.bgShow) {
+        this.bgShown = true;
+        this.windows.forEach(window => {
+          window.minimize();
+        });
+
+        global.stage.set_key_focus(this.categorizedAppCard);
+        this.backgroundSignals = [];
+        let signalId = global.stage.connect('notify::key-focus', () => {
+          let focus = global.stage.get_key_focus();
+          if (focus !== this.categorizedAppCard) {
+            this.unRevealBackground();
+          }
+        });
+        this.backgroundSignals.push({from: global.stage, id: signalId});
+
+        /*signalId = this.categorizedAppCard.connect(
+            'clicked', () => {
+              if (this.bgShown) {
+                this.unRevealBackground();
+                this.bgShow = false;
+              }
+            }
+        );
+        this.backgroundSignals.push({
+          from: this.categorizedAppCard,
+          id: signalId
+        });*/
+      }
+    }
+
+    unRevealBackground() {
+      if (this.bgShow) {
+        this.bgShown = false;
+        this.windows.forEach(window => {
+          window.unminimize();
+        });
+        this.backgroundSignals.forEach(signal => {
+          signal.from.disconnect(signal.id);
+        });
+        this.backgroundSignals = [];
+      }
     }
 
     emitWindowsChanged(newWindows, oldWindows, debouncedArgs) {

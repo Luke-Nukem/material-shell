@@ -68,7 +68,7 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                     this.currentSuperWorkspace.uiVisible = true;
                     this.currentSuperWorkspace.updateUI();
                     global.superWorkspaceManager.tilingIcon.gicon =
-                this.currentSuperWorkspace.tilingLayout.icon;
+                        this.currentSuperWorkspace.tilingLayout.icon;
                 },
             ),
         });
