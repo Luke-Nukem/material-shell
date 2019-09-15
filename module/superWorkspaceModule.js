@@ -6,7 +6,7 @@ const Tweener = imports.ui.tweener;
 
 const { AppsManager } = Me.imports.superWorkspace.appsManager;
 const {
-    SuperWorkspaceManager
+    SuperWorkspaceManager,
 } = Me.imports.superWorkspace.superWorkspaceManager;
 const { ShellVersionMatch } = Me.imports.utils.compatibility;
 
@@ -20,17 +20,17 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
         Main.wm.getWindowClone = function(metaWindow) {
             let windowActor = metaWindow.get_compositor_private();
             /* let actorContent = Shell.util_get_content_for_window_actor(
-                windowActor,
-                metaWindow.get_frame_rect()
-            );
-            let actorClone = new St.Widget({ content: actorContent }); */
+          windowActor,
+          metaWindow.get_frame_rect()
+      );
+      let actorClone = new St.Widget({ content: actorContent }); */
             let actorClone = new Clutter.Clone({
-                source: windowActor
+                source: windowActor,
             });
 
             let constraint = new Clutter.BindConstraint({
                 source: windowActor,
-                coordinate: Clutter.BindCoordinate.ALL
+                coordinate: Clutter.BindCoordinate.ALL,
             });
 
             actorClone.add_constraint(constraint);
@@ -40,7 +40,7 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
 
     enable() {
         global.superWorkspaceManager = new SuperWorkspaceManager(
-            AppsManager.groupAppsByCategory(AppsManager.getApps())
+            AppsManager.groupAppsByCategory(AppsManager.getApps()),
         );
         this.currentSuperWorkspace = global.superWorkspaceManager.getActiveSuperWorkspace();
 
@@ -53,12 +53,12 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                         superWorkspace = global.superWorkspaceManager.getActiveSuperWorkspace();
                     } else {
                         superWorkspace = global.superWorkspaceManager.getSuperWorkspacesOfMonitorIndex(
-                            monitor.index
+                            monitor.index,
                         )[0];
                     }
                     superWorkspace.updateUI();
                 });
-            })
+            }),
         });
 
         this.overrideWindowManagerFunctions();
@@ -75,16 +75,16 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                     this.currentSuperWorkspace.uiVisible = true;
                     this.currentSuperWorkspace.updateUI();
                     global.superWorkspaceManager.tilingIcon.gicon =
-                        this.currentSuperWorkspace.tilingLayout.icon;
-                }
-            )
+                this.currentSuperWorkspace.tilingLayout.icon;
+                },
+            ),
         });
 
         this.signals.push({
             from: global.display,
             id: global.display.connect('window-created', (_, metaWindow) => {
                 global.superWorkspaceManager.onNewWindow(metaWindow);
-            })
+            }),
         });
 
         this._listenToDispatchWindow();
@@ -95,8 +95,8 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                 'installed-changed',
                 () => {
                     this.dispatchApps();
-                }
-            )
+                },
+            ),
         });
 
         this.signalMonitorId = Main.layoutManager.connect(
@@ -104,10 +104,10 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
             () => {
                 global.superWorkspaceManager.destroy();
                 global.superWorkspaceManager = new SuperWorkspaceManager(
-                    AppsManager.groupAppsByCategory(AppsManager.getApps())
+                    AppsManager.groupAppsByCategory(AppsManager.getApps()),
                 );
                 this.currentSuperWorkspace = global.superWorkspaceManager.getActiveSuperWorkspace();
-            }
+            },
         );
     }
 
@@ -125,11 +125,11 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
     }
 
     overrideWindowManagerFunctions() {
-        /*
-         * Override the _prepareWorkspaceSwitch for two reasons
-         *  1- Add a container around the animation container to clip around the primary monitor to prevent the animated windows to be visible in secondary screens
-         *  2- Add the panels and backgrounds to the animated container so they will follow the transition animation.
-         */
+    /*
+     * Override the _prepareWorkspaceSwitch for two reasons
+     *  1- Add a container around the animation container to clip around the primary monitor to prevent the animated windows to be visible in secondary screens
+     *  2- Add the panels and backgrounds to the animated container so they will follow the transition animation.
+     */
         this.original_prepareWorkspaceSwitch = Main.wm._prepareWorkspaceSwitch;
         Main.wm._prepareWorkspaceSwitch = function(from, to, direction) {
             if (this._switchData) return;
@@ -156,50 +156,50 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
             wgroup.add_actor(switchData.movingWindowBin);
             wgroup.insert_child_above(
                 switchData.overContainer,
-                global.window_group
+                global.window_group,
             );
 
             let primaryMonitorGeometry = global.display.get_monitor_geometry(
-                global.display.get_primary_monitor()
+                global.display.get_primary_monitor(),
             );
             switchData.overContainer.set_clip(
                 primaryMonitorGeometry.x,
                 primaryMonitorGeometry.y,
                 primaryMonitorGeometry.width,
-                primaryMonitorGeometry.height
+                primaryMonitorGeometry.height,
             );
 
             let workspaceManager = global.workspace_manager;
             let curWs = workspaceManager.get_workspace_by_index(from);
 
             switchData.superWorkspace = global.superWorkspaceManager.getPrimarySuperWorkspaceByIndex(
-                from
+                from,
             );
 
             switchData.superWorkspace.uiVisible = true;
             switchData.superWorkspace.updateUI();
             switchData.superWorkspace.backgroundContainer.reparent(
-                switchData.curGroup
+                switchData.curGroup,
             );
             switchData.superWorkspace.frontendContainer.reparent(
-                switchData.curGroup
+                switchData.curGroup,
             );
 
             for (let dir of Object.values(Meta.MotionDirection)) {
                 let ws = null;
 
                 if (to < 0) ws = curWs.get_neighbor(dir);
-                else if (dir == direction)
+                else if (dir === direction)
                     ws = workspaceManager.get_workspace_by_index(to);
 
-                if (ws == null || ws == curWs) {
+                if (ws == null || ws === curWs) {
                     switchData.surroundings[dir] = null;
                     continue;
                 }
 
                 let info = {
                     index: ws.index(),
-                    actor: new Clutter.Actor()
+                    actor: new Clutter.Actor(),
                 };
                 switchData.surroundings[dir] = info;
                 switchData.container.add_actor(info.actor);
@@ -209,7 +209,7 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                 info.actor.set_position(x, y);
 
                 info.superWorkspace = global.superWorkspaceManager.getPrimarySuperWorkspaceByIndex(
-                    ws.index()
+                    ws.index(),
                 );
 
                 info.superWorkspace.backgroundContainer.reparent(info.actor);
@@ -229,16 +229,16 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
 
                 if (window.is_on_all_workspaces()) continue;
 
-                if (this._movingWindow && window == this._movingWindow) {
+                if (this._movingWindow && window === this._movingWindow) {
                     actor.reparent(switchData.movingWindowBin);
-                } else if (window.get_workspace().index() == from) {
+                } else if (window.get_workspace().index() === from) {
                     actor.reparent(switchData.curGroup);
                 } else {
                     for (let dir of Object.values(Meta.MotionDirection)) {
                         let info = switchData.surroundings[dir];
                         if (
                             !info ||
-                            info.index != window.get_workspace().index()
+                info.index !== window.get_workspace().index()
                         )
                             continue;
 
@@ -250,22 +250,22 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
             }
 
             switchData.superWorkspace.frontendContainer.reparent(
-                switchData.curGroup
+                switchData.curGroup,
             );
         };
 
         /*
-         * Override the _finishWorkspaceSwitch to clear the changes of _prepareWorkspaceSwitch
-         */
+     * Override the _finishWorkspaceSwitch to clear the changes of _prepareWorkspaceSwitch
+     */
         this.original_finishWorkspaceSwitch = Main.wm._finishWorkspaceSwitch;
 
         Main.wm._finishWorkspaceSwitch = function(switchData) {
             this._switchData = null;
             switchData.superWorkspace.frontendContainer.reparent(
-                Main.layoutManager.uiGroup
+                Main.layoutManager.uiGroup,
             );
             switchData.superWorkspace.backgroundContainer.reparent(
-                Main.layoutManager._backgroundGroup
+                Main.layoutManager._backgroundGroup,
             );
             switchData.superWorkspace.uiVisible = false;
             switchData.superWorkspace.updateUI();
@@ -274,10 +274,10 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                 let info = switchData.surroundings[dir];
                 if (info) {
                     info.superWorkspace.frontendContainer.reparent(
-                        Main.layoutManager.uiGroup
+                        Main.layoutManager.uiGroup,
                     );
                     info.superWorkspace.backgroundContainer.reparent(
-                        Main.layoutManager._backgroundGroup
+                        Main.layoutManager._backgroundGroup,
                     );
                 }
             }
@@ -309,9 +309,9 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
             let [xDest, yDest] = this._getPositionForDirection(direction);
 
             /* @direction is the direction that the "camera" moves, so the
-             * screen contents have to move one screen's worth in the
-             * opposite direction.
-             */
+       * screen contents have to move one screen's worth in the
+       * opposite direction.
+       */
             xDest = -xDest;
             yDest = -yDest;
             if (ShellVersionMatch('3.32')) {
@@ -322,7 +322,7 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                     transition: 'easeOutQuad',
                     onComplete: this._switchWorkspaceDone,
                     onCompleteScope: this,
-                    onCompleteParams: [shellwm]
+                    onCompleteParams: [shellwm],
                 });
             } else {
                 this._switchData.container.ease({
@@ -330,7 +330,7 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                     translate_y: yDest,
                     duration: WINDOW_ANIMATION_TIME,
                     mode: Clutter.AnimationMode.EASE_OUT_QUAD,
-                    onComplete: () => this._switchWorkspaceDone(shellwm)
+                    onComplete: () => this._switchWorkspaceDone(shellwm),
                 });
             }
         };
@@ -358,8 +358,8 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
     }
 
     /*
-     ** Connect to windows events and redispatch windows in workspacesEnhancer
-     */
+   ** Connect to windows events and redispatch windows in workspacesEnhancer
+   */
     _listenToDispatchWindow() {
         for (let w = 0; w < this.workspaceManager.n_workspaces; w++) {
             let workspace = this.workspaceManager.get_workspace_by_index(w);
@@ -372,8 +372,8 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                 'workspace-added',
                 (_, workspace) => {
                     this.listenWorkspaceEventToDispatch(workspace);
-                }
-            )
+                },
+            ),
         });
 
         this.signals.push({
@@ -384,10 +384,10 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                     //Ignore unHandle window and window on primary screens
                     global.superWorkspaceManager.windowEnteredMonitor(
                         window,
-                        monitorIndex
+                        monitorIndex,
                     );
-                }
-            )
+                },
+            ),
         });
 
         this.signals.push({
@@ -396,13 +396,13 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                 'window-left-monitor',
                 (display, monitorIndex, window) => {
                     /*
-                    //Ignore unHandle window and window on primary screens
-                    global.superWorkspaceManager.windowLeftMonitor(
-                        window,
-                        monitorIndex
-                    ); */
-                }
-            )
+            //Ignore unHandle window and window on primary screens
+            global.superWorkspaceManager.windowLeftMonitor(
+                window,
+                monitorIndex
+            ); */
+                },
+            ),
         });
     }
 
@@ -412,19 +412,20 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
             id: workspace.connect('window-added', (workspace, window) => {
                 global.superWorkspaceManager.windowEnteredWorkspace(
                     window,
-                    workspace
+                    workspace,
                 );
-            })
+            }),
         });
 
+        // noinspection JSUnusedLocalSymbols
         this.signals.push({
             from: workspace,
             id: workspace.connect('window-removed', (workspace, window) => {
                 /* global.superWorkspaceManager.windowLeftWorkspace(
-                    window,
-                    workspace
-                ); */
-            })
+            window,
+            workspace
+        ); */
+            }),
         });
     }
 };

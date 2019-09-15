@@ -42,9 +42,9 @@ var MaximizeLayout = class MaximizeLayout extends BaseTilingLayout {
                 window => !regularWindows.includes(window)
             );
             const oldIndex =
-                windowRemovedIndex === oldRegularWindows.length - 1
-                    ? windowRemovedIndex
-                    : -1;
+          windowRemovedIndex === oldRegularWindows.length - 1
+              ? windowRemovedIndex
+              : -1;
 
             this.currentWindowIndex = Math.max(
                 regularWindows.indexOf(this.superWorkspace.windowFocused),
@@ -72,7 +72,7 @@ var MaximizeLayout = class MaximizeLayout extends BaseTilingLayout {
 
             if (
                 index !== this.currentWindowIndex ||
-                !this.superWorkspace.isDisplayed()
+          !this.superWorkspace.isDisplayed()
             ) {
                 actor.hide();
             } else {

@@ -2,12 +2,13 @@ const Main = imports.ui.main;
 
 /* exported HideDashModule */
 var HideDashModule = class HideDashModule {
-    constructor() {}
+    constructor() {
+    }
 
     enable() {
         Main.overview._controls.dash.actor.hide();
         Main.overview._controls._group.remove_child(
-            Main.overview._controls._dashSpacer
+            Main.overview._controls._dashSpacer,
         );
     }
 
@@ -15,7 +16,7 @@ var HideDashModule = class HideDashModule {
         Main.overview._controls.dash.actor.show();
         Main.overview._controls._group.insert_child_at_index(
             Main.overview._controls._dashSpacer,
-            0
+            0,
         );
     }
 };

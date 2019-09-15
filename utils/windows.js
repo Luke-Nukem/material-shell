@@ -4,9 +4,8 @@ const Meta = imports.gi.Meta;
 const GLib = imports.gi.GLib;
 
 var updateTitleBarVisibility = function(window) {
-    let superWorkspaceIsInFloatLayout =
-        window.superWorkspace.tilingLayout.constructor.key === 'float';
-    let shouldTitleBarBeVisible = superWorkspaceIsInFloatLayout;
+    let shouldTitleBarBeVisible = window.superWorkspace.tilingLayout.constructor.key ===
+      'float';
     if (window.titleBarVisible !== shouldTitleBarBeVisible) {
         setTitleBarVisibility(window, shouldTitleBarBeVisible);
     }

@@ -26,7 +26,7 @@ var HalfLayout = class HalfLayout extends BaseGrabbableLayout {
         const workArea = this.getWorkspaceBounds();
 
         let masterWidth =
-            windows.length > 1 ? workArea.width / 2 : workArea.width;
+        windows.length > 1 ? workArea.width / 2 : workArea.width;
 
         windows.forEach((window, index) => {
             if (index === 0) {
@@ -43,7 +43,7 @@ var HalfLayout = class HalfLayout extends BaseGrabbableLayout {
                     window,
                     workArea.x + masterWidth,
                     workArea.y +
-                        ((index - 1) * workArea.height) / (windows.length - 1),
+            ((index - 1) * workArea.height) / (windows.length - 1),
                     workArea.width - masterWidth,
                     workArea.height / (windows.length - 1),
                     true
@@ -58,7 +58,7 @@ var HalfLayout = class HalfLayout extends BaseGrabbableLayout {
         const workArea = this.getWorkspaceBounds();
 
         let masterHeight =
-            windows.length > 1 ? workArea.height / 2 : workArea.height;
+        windows.length > 1 ? workArea.height / 2 : workArea.height;
 
         windows.forEach((window, index) => {
             if (index === 0) {
@@ -74,7 +74,7 @@ var HalfLayout = class HalfLayout extends BaseGrabbableLayout {
                 this.moveAndResizeMetaWindow(
                     window,
                     workArea.x +
-                        ((index - 1) * workArea.width) / (windows.length - 1),
+            ((index - 1) * workArea.width) / (windows.length - 1),
                     workArea.y + masterHeight,
                     workArea.width / (windows.length - 1),
                     workArea.height - masterHeight,

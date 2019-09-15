@@ -43,8 +43,8 @@ var TopPanel = GObject.registerClass(
 
             let themeNode = this.get_theme_node();
             box = themeNode.get_content_box(box);
-            let scaleFactor = St.ThemeContext.get_for_stage(global.stage)
-                .scale_factor;
+            let scaleFactor = St.ThemeContext.get_for_stage(
+                global.stage).scale_factor;
             box.x2 = box.x2 - 48 * scaleFactor;
             this._leftContainer.allocate(box, flags);
 

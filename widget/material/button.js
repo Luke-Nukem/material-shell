@@ -48,16 +48,17 @@ var MatButton = GObject.registerClass(
                 }
             });
         }
+
         /**
-         * Just the child width but taking into account the slided out part
-         */
+       * Just the child width but taking into account the slided out part
+       */
         vfunc_get_preferred_width(forHeight) {
             return this.actorContainer.vfunc_get_preferred_width(forHeight);
         }
 
         /**
-         * Just the child height but taking into account the slided out part
-         */
+       * Just the child height but taking into account the slided out part
+       */
         vfunc_get_preferred_height(forWidth) {
             return this.actorContainer.vfunc_get_preferred_height(forWidth);
         }

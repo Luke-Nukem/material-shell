@@ -14,7 +14,7 @@ var SuperWorkspaceManager = class SuperWorkspaceManager {
         this.superWorkspaces = [];
         this.appsByCategory = appsByCategory;
         this.categoryKeyOrderedList =
-            Me.stateManager.getState('categoryKeyOrderedList') || [];
+        Me.stateManager.getState('categoryKeyOrderedList') || [];
         this.noUImode = false;
         for (let [key, category] of Object.entries(WorkspaceCategories)) {
             if (!this.appsByCategory[key].length) continue;
@@ -105,12 +105,11 @@ var SuperWorkspaceManager = class SuperWorkspaceManager {
                 );
             } else {
                 let workspaceIndexToRemove =
-                    this.workspaceManager.n_workspaces - 1;
+            this.workspaceManager.n_workspaces - 1;
                 if (workspaceIndexToRemove === activeWorkspaceIndex) {
                     Main.wm._blockAnimations = true;
-                    this.workspaceManager
-                        .get_workspace_by_index(0)
-                        .activate(global.get_current_time());
+                    this.workspaceManager.get_workspace_by_index(0).
+              activate(global.get_current_time());
                     Main.wm._blockAnimations = false;
                 }
                 this.workspaceManager.remove_workspace(
@@ -233,7 +232,6 @@ var SuperWorkspaceManager = class SuperWorkspaceManager {
 
     onNewWindow(metaWindow) {
         if (!this._handleWindow(metaWindow)) return;
-        let windowActor = metaWindow.get_compositor_private();
 
         // This flags if we handle this window or not for the session
         metaWindow.handledByMaterialShell = true;
@@ -266,9 +264,9 @@ var SuperWorkspaceManager = class SuperWorkspaceManager {
             superWorkspace = this.superWorkspaces.find(superWorkspace => {
                 return (
                     superWorkspace.category.primary &&
-                    superWorkspace.apps.findIndex(app => {
-                        return app.get_id() === appToFind.get_id();
-                    }) > -1
+            superWorkspace.apps.findIndex(app => {
+                return app.get_id() === appToFind.get_id();
+            }) > -1
                 );
             });
 
@@ -284,7 +282,7 @@ var SuperWorkspaceManager = class SuperWorkspaceManager {
         );
         if (
             workspaceOfSuperWorkspace &&
-            workspaceOfSuperWorkspace !== currentWindowWorkspace
+        workspaceOfSuperWorkspace !== currentWindowWorkspace
         ) {
             metaWindow.change_workspace(workspaceOfSuperWorkspace);
         }
@@ -300,8 +298,8 @@ var SuperWorkspaceManager = class SuperWorkspaceManager {
     windowEnteredWorkspace(metaWindow, workspace) {
         if (
             !metaWindow.handledByMaterialShell ||
-            metaWindow.on_all_workspaces ||
-            !metaWindow.get_compositor_private()
+        metaWindow.on_all_workspaces ||
+        !metaWindow.get_compositor_private()
         ) {
             return;
         }
@@ -313,10 +311,10 @@ var SuperWorkspaceManager = class SuperWorkspaceManager {
     }
 
     windowEnteredMonitor(metaWindow, monitorIndex) {
-        //Ignore unHandle metaWindow and metaWindow on secondary screens
+    //Ignore unHandle metaWindow and metaWindow on secondary screens
         if (
             !metaWindow.handledByMaterialShell ||
-            monitorIndex === Main.layoutManager.primaryIndex
+        monitorIndex === Main.layoutManager.primaryIndex
         ) {
             return;
         }

@@ -60,8 +60,8 @@ var TilingManager = class TilingManager {
                                 global.superWorkspaceManager.superWorkspaces.forEach(
                                     superWorkspace => {
                                         if (
-                                            key ==
-                                            superWorkspace.tilingLayout.key
+                                            key ===
+                              superWorkspace.tilingLayout.key
                                         ) {
                                             superWorkspace.nextTiling(1);
                                         }
@@ -90,7 +90,7 @@ var TilingManager = class TilingManager {
     }
 
     getLayoutByKey(key) {
-        // If the layout is not in the available layouts return the first available
+    // If the layout is not in the available layouts return the first available
         if (!this.availableLayouts.includes(key)) {
             key = this.availableLayouts[0];
         }
@@ -136,9 +136,9 @@ var TilingManager = class TilingManager {
                 let layout = superWorkspace.tilingLayout;
 
                 /* let [
-                    dialogWindows,
-                    regularWindows
-                ] = this.getDialogAndRegularWindows(superWorkspace.windows); */
+            dialogWindows,
+            regularWindows
+        ] = this.getDialogAndRegularWindows(superWorkspace.windows); */
 
                 layout.onTile();
                 //this.dialogLayout.onTile(dialogWindows, monitor);

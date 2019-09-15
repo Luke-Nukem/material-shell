@@ -25,21 +25,21 @@ var BaseGrabbableLayout = class BaseGrabbableLayout extends BaseTilingLayout {
                             let rect = windowToCheck.get_frame_rect();
                             return (
                                 x >= rect.x &&
-                                x <= rect.x + rect.width &&
-                                y >= rect.y &&
-                                y <= rect.y + rect.height
+                      x <= rect.x + rect.width &&
+                      y >= rect.y &&
+                      y <= rect.y + rect.height
                             );
                         }
                     );
                     if (
                         windowHovered &&
-                        this.superWorkspace.windows.indexOf(windowHovered) >
-                            -1 &&
-                        this.superWorkspace.windows.indexOf(this.grabWindow) >
-                            -1 &&
-                        !Tweener.getTweenCount(
-                            windowHovered.get_compositor_private()
-                        )
+                this.superWorkspace.windows.indexOf(windowHovered) >
+                -1 &&
+                this.superWorkspace.windows.indexOf(this.grabWindow) >
+                -1 &&
+                !Tweener.getTweenCount(
+                    windowHovered.get_compositor_private()
+                )
                     ) {
                         this.superWorkspace.swapWindows(
                             this.grabWindow,

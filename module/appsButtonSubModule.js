@@ -12,14 +12,14 @@ var AppsButtonSubModule = class AppsButtonSubModule {
         this.panel = panel;
         let icon = new St.Icon({
             gicon: Gio.icon_new_for_string(
-                `${Me.path}/assets/icons/menu-symbolic.svg`
+                `${Me.path}/assets/icons/menu-symbolic.svg`,
             ),
-            style_class: 'workspace-main-icon'
+            style_class: 'workspace-main-icon',
         });
 
         this.button = new MatButton({
             child: icon,
-            style_class: 'workspace-button'
+            style_class: 'workspace-button',
         });
 
         this.button.connect('clicked', () => {
@@ -34,7 +34,7 @@ var AppsButtonSubModule = class AppsButtonSubModule {
     }
 
     enable() {
-      // 5- Hide the activities button
+    // 5- Hide the activities button
         if (ShellVersionMatch('3.32')) {
             this.panel.statusArea.activities.actor.hide();
         } else {

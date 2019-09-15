@@ -78,8 +78,7 @@ var WorkspaceList = GObject.registerClass(
 
             this.add_child(this.workspaceActiveIndicator);
 
-            for (let categoryKey of this.superWorkspaceManager
-                .categoryKeyOrderedList) {
+            for (let categoryKey of this.superWorkspaceManager.categoryKeyOrderedList) {
                 let category = WorkspaceCategories[categoryKey];
                 let workspaceButton = new WorkspaceButton(
                     this.superWorkspaceManager,
@@ -134,7 +133,7 @@ var WorkspaceList = GObject.registerClass(
                 () => {
                     this.activeButtonForIndex(
                         this.superWorkspaceManager.categoryKeyOrderedList[
-                            global.workspace_manager.get_active_workspace_index()
+                      global.workspace_manager.get_active_workspace_index()
                         ]
                     );
                 }
@@ -142,7 +141,7 @@ var WorkspaceList = GObject.registerClass(
 
             this.activeButtonForIndex(
                 this.superWorkspaceManager.categoryKeyOrderedList[
-                    global.workspace_manager.get_active_workspace_index()
+                global.workspace_manager.get_active_workspace_index()
                 ]
             );
         }
@@ -150,10 +149,10 @@ var WorkspaceList = GObject.registerClass(
         handleDragOver() {
             if (!this.tempDragData.draggedOverByChild) {
                 let workspaceButton =
-                    this.items[this.items.length - 1] ===
-                    this.tempDragData.workspaceButton
-                        ? this.items[this.items.length - 2]
-                        : this.items[this.items.length - 1];
+              this.items[this.items.length - 1] ===
+              this.tempDragData.workspaceButton
+                  ? this.items[this.items.length - 2]
+                  : this.items[this.items.length - 1];
                 this._onDragOver(workspaceButton, false);
             } else {
                 this.tempDragData.draggedOverByChild = false;
@@ -172,7 +171,7 @@ var WorkspaceList = GObject.registerClass(
                     this.buttonList.set_child_at_index(
                         this.tempDragData.workspaceButton,
                         toIndex -
-                            (this.tempDragData.initialIndex < toIndex ? 1 : 0)
+                (this.tempDragData.initialIndex < toIndex ? 1 : 0)
                     );
 
                     this.superWorkspaceManager.setWorkspaceBefore(
@@ -183,7 +182,7 @@ var WorkspaceList = GObject.registerClass(
                     this.buttonList.set_child_at_index(
                         this.tempDragData.workspaceButton,
                         toIndex +
-                            (this.tempDragData.initialIndex < toIndex ? 0 : 1)
+                (this.tempDragData.initialIndex < toIndex ? 0 : 1)
                     );
                     this.superWorkspaceManager.setWorkspaceAfter(
                         this.tempDragData.workspaceButton.categoryKey,
@@ -205,16 +204,14 @@ var WorkspaceList = GObject.registerClass(
             this.tempDragData.draggedOver = workspaceButton;
             this.tempDragData.draggedBefore = before;
             this.dropPlaceholder.resize(this.tempDragData.workspaceButton);
-            let dropPlaceholderIndex = this.buttonList
-                .get_children()
-                .indexOf(this.dropPlaceholder);
-            let workspaceButtonIndex = this.buttonList
-                .get_children()
-                .indexOf(workspaceButton);
+            let dropPlaceholderIndex = this.buttonList.get_children().
+            indexOf(this.dropPlaceholder);
+            let workspaceButtonIndex = this.buttonList.get_children().
+            indexOf(workspaceButton);
             let toIndex =
-                dropPlaceholderIndex < workspaceButtonIndex
-                    ? workspaceButtonIndex - 1
-                    : workspaceButtonIndex;
+            dropPlaceholderIndex < workspaceButtonIndex
+                ? workspaceButtonIndex - 1
+                : workspaceButtonIndex;
             if (this.tempDragData.draggedBefore) {
                 this.buttonList.set_child_at_index(
                     this.dropPlaceholder,
@@ -242,28 +239,28 @@ var WorkspaceList = GObject.registerClass(
             }
             this.buttonActive = this.getButtonFromCategoryKey(categoryKey);
             this.buttonActive.actorContainer.add_style_class_name('active');
-            let scaleFactor = St.ThemeContext.get_for_stage(global.stage)
-                .scale_factor;
+            let scaleFactor = St.ThemeContext.get_for_stage(
+                global.stage).scale_factor;
 
             if (ShellVersionMatch('3.32')) {
                 Tweener.addTween(this.workspaceActiveIndicator, {
                     translation_x:
-                        40 *
-                        scaleFactor *
-                        this.superWorkspaceManager.categoryKeyOrderedList.indexOf(
-                            categoryKey
-                        ),
+                40 *
+                scaleFactor *
+                this.superWorkspaceManager.categoryKeyOrderedList.indexOf(
+                    categoryKey
+                ),
                     time: 0.25,
                     transition: 'easeOutQuad'
                 });
             } else {
                 this.workspaceActiveIndicator.ease({
                     translation_x:
-                        40 *
-                        scaleFactor *
-                        this.superWorkspaceManager.categoryKeyOrderedList.indexOf(
-                            categoryKey
-                        ),
+                40 *
+                scaleFactor *
+                this.superWorkspaceManager.categoryKeyOrderedList.indexOf(
+                    categoryKey
+                ),
                     duration: 250,
                     mode: Clutter.AnimationMode.EASE_OUT_QUAD
                 });
@@ -306,13 +303,11 @@ var WorkspaceButton = GObject.registerClass(
             this.superWorkspaceManager = superWorkspaceManager;
             this.categoryKey = categoryKey;
             this.connect('clicked', () => {
-                global.workspace_manager
-                    .get_workspace_by_index(
-                        this.superWorkspaceManager.categoryKeyOrderedList.indexOf(
-                            this.categoryKey
-                        )
+                global.workspace_manager.get_workspace_by_index(
+                    this.superWorkspaceManager.categoryKeyOrderedList.indexOf(
+                        this.categoryKey
                     )
-                    .activate(global.get_current_time());
+                ).activate(global.get_current_time());
             });
 
             this.mouseData = {
@@ -348,8 +343,8 @@ var WorkspaceButton = GObject.registerClass(
                             Math.abs(
                                 this.mouseData.originalCoords[0] - coords[0]
                             ) >
-                                48 * scaleFactor &&
-                            !this.mouseData.dragged
+                  48 * scaleFactor &&
+                  !this.mouseData.dragged
                         ) {
                             this.mouseData.dragged = true;
                             this._draggable.startDrag(
@@ -383,6 +378,7 @@ var WorkspaceButton = GObject.registerClass(
 
             this.initDrag();
         }
+
         initDrag() {
             this._draggable = DND.makeDraggable(this, {
                 restoreOnSuccess: false,

@@ -81,27 +81,25 @@ var SplitLayout = class SplitLayout extends BaseGrabbableLayout {
         super.onTileRegulars(windows);
         const workArea = this.getWorkspaceBounds();
         // Sizing inactive windows
-        windows
-            .filter(window => {
-                !this.activeWindows.includes(window);
-            })
-            .forEach(window => {
-                this.moveAndResizeMetaWindow(
-                    window,
-                    workArea.x,
-                    workArea.y,
-                    workArea.width /
-                        (workArea.width > workArea.height
-                            ? WINDOW_PER_SCREEN
-                            : 1),
-                    workArea.height /
-                        (workArea.width <= workArea.height
-                            ? WINDOW_PER_SCREEN
-                            : 1),
-                    false,
-                    true
-                );
-            });
+        windows.filter(window => {
+            !this.activeWindows.includes(window);
+        }).forEach(window => {
+            this.moveAndResizeMetaWindow(
+                window,
+                workArea.x,
+                workArea.y,
+                workArea.width /
+          (workArea.width > workArea.height
+              ? WINDOW_PER_SCREEN
+              : 1),
+                workArea.height /
+          (workArea.width <= workArea.height
+              ? WINDOW_PER_SCREEN
+              : 1),
+                false,
+                true
+            );
+        });
         // Positionning active windows
         this.activeWindows.forEach((window, i) => {
             const windowBounds = {
@@ -131,7 +129,7 @@ var SplitLayout = class SplitLayout extends BaseGrabbableLayout {
         windows.forEach(window => {
             if (
                 !this.activeWindows.includes(window) ||
-                !this.superWorkspace.isDisplayed()
+          !this.superWorkspace.isDisplayed()
             ) {
                 window.get_compositor_private().hide();
             } else {
@@ -166,32 +164,29 @@ var SplitLayout = class SplitLayout extends BaseGrabbableLayout {
         );
         this.transitionContainer.remove_all_children();
         const direction =
-            regularWindows.indexOf(newMetaWindows[0]) -
-            regularWindows.indexOf(oldMetaWindows[0]);
+        regularWindows.indexOf(newMetaWindows[0]) -
+        regularWindows.indexOf(oldMetaWindows[0]);
 
         const allMetaWindows =
-            direction > 0
-                ? oldMetaWindows.concat(newMetaWindows)
-                : newMetaWindows.concat(oldMetaWindows);
+        direction > 0
+            ? oldMetaWindows.concat(newMetaWindows)
+            : newMetaWindows.concat(oldMetaWindows);
 
-        allMetaWindows
-            .filter(
-                window => window.get_compositor_private() && !window.grabbed
-            )
-            .map(metaWindow => metaWindow.get_compositor_private())
-            .forEach(window => {
-                let rect = window.meta_window.get_frame_rect();
-                let actorContent = Shell.util_get_content_for_window_actor(
-                    window,
-                    rect
-                );
-                let actorClone = new St.Widget({
-                    content: actorContent
-                });
-                actorClone.set_size(rect.width, rect.height);
-                this.transitionContainer.add_child(actorClone);
-                window.hide();
+        allMetaWindows.filter(
+            window => window.get_compositor_private() && !window.grabbed
+        ).map(metaWindow => metaWindow.get_compositor_private()).forEach(window => {
+            let rect = window.meta_window.get_frame_rect();
+            let actorContent = Shell.util_get_content_for_window_actor(
+                window,
+                rect
+            );
+            let actorClone = new St.Widget({
+                content: actorContent
             });
+            actorClone.set_size(rect.width, rect.height);
+            this.transitionContainer.add_child(actorClone);
+            window.hide();
+        });
 
         const workArea = this.getWorkspaceBounds();
         let xFrom = workArea.x;
@@ -200,7 +195,7 @@ var SplitLayout = class SplitLayout extends BaseGrabbableLayout {
         let yTo = workArea.y;
         if (workArea.width > workArea.height) {
             const shift =
-                (workArea.width * newMetaWindows.length) / WINDOW_PER_SCREEN;
+          (workArea.width * newMetaWindows.length) / WINDOW_PER_SCREEN;
             if (direction > 0) {
                 xTo -= shift;
             } else {
@@ -208,7 +203,7 @@ var SplitLayout = class SplitLayout extends BaseGrabbableLayout {
             }
         } else {
             const shift =
-                (workArea.height * newMetaWindows.length) / WINDOW_PER_SCREEN;
+          (workArea.height * newMetaWindows.length) / WINDOW_PER_SCREEN;
             if (direction > 0) {
                 yTo -= shift;
             } else {
@@ -255,12 +250,11 @@ var SplitLayout = class SplitLayout extends BaseGrabbableLayout {
     }
 
     endTransition() {
-        this.activeWindows
-            .map(metaWindow => metaWindow.get_compositor_private())
-            .filter(window => window)
-            .forEach(window => {
-                window.show();
-            });
+        this.activeWindows.map(metaWindow => metaWindow.get_compositor_private()).
+        filter(window => window).
+        forEach(window => {
+            window.show();
+        });
         global.window_group.remove_child(this.overContainer);
 
         this.onTile();

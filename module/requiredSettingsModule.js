@@ -7,33 +7,33 @@ const { getSettings } = Me.imports.utils.settings;
 var RequiredSettingsModule = class RequiredSettingsModule {
     constructor() {
         this.mutterSettings = new Gio.Settings({
-            schema_id: 'org.gnome.mutter'
+            schema_id: 'org.gnome.mutter',
         });
         this.settingsToForce = [
             {
                 schema: 'org.gnome.mutter',
                 key: 'dynamic-workspaces',
                 value: false,
-                valueType: 'boolean'
+                valueType: 'boolean',
             },
             {
                 schema: 'org.gnome.mutter',
                 key: 'workspaces-only-on-primary',
                 value: true,
-                valueType: 'boolean'
+                valueType: 'boolean',
             },
             {
                 schema: 'org.gnome.shell.overrides',
                 key: 'edge-tiling',
                 value: false,
-                valueType: 'boolean'
+                valueType: 'boolean',
             },
             {
                 schema: 'org.gnome.mutter',
                 key: 'edge-tiling',
                 value: false,
-                valueType: 'boolean'
-            }
+                valueType: 'boolean',
+            },
         ];
     }
 
@@ -41,14 +41,14 @@ var RequiredSettingsModule = class RequiredSettingsModule {
         this.signals = [];
         this.settingsToForce.forEach(settingToForce => {
             let setting = new Gio.Settings({
-                schema_id: settingToForce.schema
+                schema_id: settingToForce.schema,
             });
 
             this.setValueIfDifferentAndNotify(
                 setting,
                 settingToForce.key,
                 settingToForce.value,
-                settingToForce.valueType
+                settingToForce.valueType,
             );
 
             let signalId = setting.connect(
@@ -58,14 +58,14 @@ var RequiredSettingsModule = class RequiredSettingsModule {
                         setting,
                         settingToForce.key,
                         settingToForce.value,
-                        settingToForce.valueType
+                        settingToForce.valueType,
                     );
-                }
+                },
             );
 
             this.signals.push({
                 from: setting,
-                signalId: signalId
+                signalId: signalId,
             });
         });
 
@@ -78,22 +78,22 @@ var RequiredSettingsModule = class RequiredSettingsModule {
             'org.gnome.desktop.wm.keybindings',
             'org.gnome.shell.keybindings',
             'org.gnome.mutter.keybindings',
-            'org.gnome.mutter.wayland.keybindings'
+            'org.gnome.mutter.wayland.keybindings',
         ]) {
             let setting = new Gio.Settings({
-                schema_id: schema
+                schema_id: schema,
             });
 
             setting.list_keys().forEach(key => {
                 let shortcut = setting.get_strv(key);
                 if (
                     shortcut[0] &&
-                    this.hotkeysToRemove.indexOf(shortcut[0]) > -1
+            this.hotkeysToRemove.indexOf(shortcut[0]) > -1
                 ) {
                     setting.set_strv(key, ['']);
                     Main.notify(
                         'Material-shell',
-                        `This extension has unset the ${key} hotkey to override it`
+                        `This extension has unset the ${key} hotkey to override it`,
                     );
                 }
             });
@@ -113,7 +113,7 @@ var RequiredSettingsModule = class RequiredSettingsModule {
 
             Main.notify(
                 'Material-shell',
-                `This extension has override the ${key} setting to ${value}`
+                `This extension has override the ${key} setting to ${value}`,
             );
         }
     }

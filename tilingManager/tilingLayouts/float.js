@@ -18,17 +18,17 @@ var FloatLayout = class FloatLayout extends BaseTilingLayout {
 
     onWindowsChanged(newWindows, oldWindows) {
         super.onWindowsChanged();
-        let leavingWindows = oldWindows.filter(
+        oldWindows.filter(
             window => !newWindows.includes(window)
         );
 
-        /*         leavingWindows.forEach(window => {
-            WindowUtils.setTitleBarVisibility(window, false);
-        });
+    /*         leavingWindows.forEach(window => {
+        WindowUtils.setTitleBarVisibility(window, false);
+    });
 
-        this.superWorkspace.windows.forEach(window => {
-            WindowUtils.setTitleBarVisibility(window, true);
-        }); */
+    this.superWorkspace.windows.forEach(window => {
+        WindowUtils.setTitleBarVisibility(window, true);
+    }); */
     }
 
     onDestroy() {
@@ -39,8 +39,12 @@ var FloatLayout = class FloatLayout extends BaseTilingLayout {
         });
         super.onDestroy();
     }
-    onTile() {}
-    onTileDialogs() {}
+
+    onTile() {
+    }
+
+    onTileDialogs() {
+    }
 };
 
 FloatLayout.key = 'float';

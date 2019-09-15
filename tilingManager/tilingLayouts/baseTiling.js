@@ -41,7 +41,8 @@ var BaseTilingLayout = class BaseTilingLayout {
         }
     }
 
-    onFocusChanged() {}
+    onFocusChanged() {
+    }
 
     onTile() {
         const {
@@ -53,14 +54,12 @@ var BaseTilingLayout = class BaseTilingLayout {
     }
 
     onTileRegulars(windows) {
-        windows
-            .filter(window => window.get_maximized())
-            .forEach(window => {
-                Main.wm.skipNextEffect(window.get_compositor_private());
-                window.unmaximize(Meta.MaximizeFlags.BOTH);
-            });
+        windows.filter(window => window.get_maximized()).forEach(window => {
+            Main.wm.skipNextEffect(window.get_compositor_private());
+            window.unmaximize(Meta.MaximizeFlags.BOTH);
+        });
 
-        // Define windows sizes and positions
+    // Define windows sizes and positions
     }
 
     onTileDialogs(windows) {
@@ -109,9 +108,9 @@ var BaseTilingLayout = class BaseTilingLayout {
         height = Math.floor(height);
         if (
             x === rect.x &&
-            y === rect.y &&
-            width === rect.width &&
-            height === rect.height
+        y === rect.y &&
+        width === rect.width &&
+        height === rect.height
         ) {
             return;
         }
@@ -249,7 +248,7 @@ var BaseTilingLayout = class BaseTilingLayout {
     }
 
     applyGaps(window) {
-        // Reduces window size according to gap setting
+    // Reduces window size according to gap setting
         const gap = global.tilingManager.gap;
         const screenGap = global.tilingManager.screenGap;
         const useScreenGap = global.tilingManager.useScreenGap;
@@ -325,8 +324,8 @@ var BaseTilingLayout = class BaseTilingLayout {
         ];
         return (
             dialogTypes.includes(metaWindow.window_type) ||
-            !metaWindow.resizeable ||
-            (metaWindow.get_transient_for() != null && metaWindow.skip_taskbar)
+        !metaWindow.resizeable ||
+        (metaWindow.get_transient_for() != null && metaWindow.skip_taskbar)
         );
     }
 };

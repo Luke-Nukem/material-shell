@@ -3,7 +3,8 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 var { TilingManager } = Me.imports.tilingManager.tilingManager;
 /* exported TilingModule */
 var TilingModule = class TilingModule {
-    constructor() {}
+    constructor() {
+    }
 
     enable() {
         this.signals = [];
@@ -11,41 +12,41 @@ var TilingModule = class TilingModule {
         let tracker = Shell.WindowTracker.get_default();
 
         /* this.signals.push({
-            from: tracker,
-            id: tracker.connect('tracked-windows-changed', () => {
-                
-                global.tilingManager.tileWindows();
-            })
-        }); */
+        from: tracker,
+        id: tracker.connect('tracked-windows-changed', () => {
+
+            global.tilingManager.tileWindows();
+        })
+    }); */
 
         /*         this.signals.push({
-            from: global.display,
-            id: global.display.connect('window-created', (_, metaWindow) => {
-                this.subscribeToWindowSignals(metaWindow);
-            })
-        }); */
+        from: global.display,
+        id: global.display.connect('window-created', (_, metaWindow) => {
+            this.subscribeToWindowSignals(metaWindow);
+        })
+    }); */
 
         /* this.signals.push({
-            from: global.display,
-            id: global.display.connect(
-                'window-entered-monitor',
-                (display, monitorIndex, window) => {
-                    
-                    this.windowChangedSomething(window);
-                }
-            )
-        });
+        from: global.display,
+        id: global.display.connect(
+            'window-entered-monitor',
+            (display, monitorIndex, window) => {
 
-        this.signals.push({
-            from: global.display,
-            id: global.display.connect(
-                'window-left-monitor',
-                (display, monitorIndex, window) => {
-                    
-                    this.windowChangedSomething(window);
-                }
-            )
-        }); */
+                this.windowChangedSomething(window);
+            }
+        )
+    });
+
+    this.signals.push({
+        from: global.display,
+        id: global.display.connect(
+            'window-left-monitor',
+            (display, monitorIndex, window) => {
+
+                this.windowChangedSomething(window);
+            }
+        )
+    }); */
 
         this.signals.push({
             from: global.display,
@@ -56,8 +57,8 @@ var TilingModule = class TilingModule {
                     this.grabInProgress = true;
                     this.grabWindow = window;
                     window.grabbed = true;
-                }
-            )
+                },
+            ),
         });
 
         this.signals.push({
@@ -68,7 +69,7 @@ var TilingModule = class TilingModule {
                     this.grabWindow.grabbed = false;
                     global.tilingManager.tileWindows();
                 }
-            })
+            }),
         });
     }
 

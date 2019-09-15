@@ -21,22 +21,22 @@ var DisableIncompatibleExtensionsModule = class DisableIncompatibleExtensionsMod
                                 () => {
                                     extension.stateObj.disable();
                                     Main.layoutManager.disconnect(
-                                        _startupPreparedId
+                                        _startupPreparedId,
                                     );
-                                }
+                                },
                             );
                         } else {
                             extension.stateObj.disable();
                         }
                     }
-                }
+                },
             },
             {
                 uuid: 'ubuntu-dock@ubuntu.com',
                 disable: extension => {
                     if (extension.stateObj) extension.stateObj.disable();
-                }
-            }
+                },
+            },
         ];
     }
 
@@ -51,5 +51,6 @@ var DisableIncompatibleExtensionsModule = class DisableIncompatibleExtensionsMod
         }
     }
 
-    disable() {}
+    disable() {
+    }
 };

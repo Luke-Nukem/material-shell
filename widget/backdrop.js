@@ -11,13 +11,13 @@ var Backdrop = GObject.registerClass(
             this.add_style_class_name('backdrop-container');
             this.window = window;
             /*             this.connect('button-press-event', (actor, event) => {
-                
-                //this.window.get_meta_window().delete(global.get_current_time());
-            });
-            this.connect('button-release-event', (actor, event) => {
-                
-                //this.window.get_meta_window().delete(global.get_current_time());
-            }); */
+
+            //this.window.get_meta_window().delete(global.get_current_time());
+        });
+        this.connect('button-release-event', (actor, event) => {
+
+            //this.window.get_meta_window().delete(global.get_current_time());
+        }); */
 
             window.connect('destroy', () => {
                 //this.remove_child(window);
@@ -46,11 +46,9 @@ var Backdrop = GObject.registerClass(
             this.connect('queue-redraw', () => {
                 if (
                     this.get_parent() === this.window.get_parent() &&
-                    this.get_parent().get_child_at_index(
-                        this.get_parent()
-                            .get_children()
-                            .indexOf(this) + 1
-                    ) !== this.window
+              this.get_parent().get_child_at_index(
+                  this.get_parent().get_children().indexOf(this) + 1
+              ) !== this.window
                 ) {
                     this.lower(this.window);
                 }

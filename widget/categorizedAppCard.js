@@ -59,15 +59,15 @@ var CategorizedAppCard = GObject.registerClass(
                 let flagExcluded = false;
                 appCategoriesList.forEach(category => {
                     flagIncluded =
-                        flagIncluded ||
-                        this.workspaceCategory.categoriesIncluded.indexOf(
-                            category
-                        ) >= 0;
+                flagIncluded ||
+                this.workspaceCategory.categoriesIncluded.indexOf(
+                    category
+                ) >= 0;
                     flagExcluded =
-                        flagExcluded ||
-                        this.workspaceCategory.categoriesExcluded.indexOf(
-                            category
-                        ) >= 0;
+                flagExcluded ||
+                this.workspaceCategory.categoriesExcluded.indexOf(
+                    category
+                ) >= 0;
                 });
                 return flagIncluded && !flagExcluded && appInfo.should_show();
             });
@@ -81,6 +81,7 @@ var SimpleIconGrid = GObject.registerClass(
             super._init();
             this.nbColumns = nbColumns;
         }
+
         loadIcons(icons) {
             this.destroy_all_children();
             this.nbRows = Math.ceil(icons.length / this.nbColumns);

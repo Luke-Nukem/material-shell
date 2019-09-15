@@ -3,9 +3,7 @@ const { GLib } = imports.gi;
 /* exported range */
 var range = to =>
     // Returns a list containing all integers from 0 to `to`
-    Array(to)
-        .fill()
-        .map((_, i) => i);
+    Array(to).fill().map((_, i) => i);
 
 /* exported debounce */
 var debounce = (fun, delay) => {

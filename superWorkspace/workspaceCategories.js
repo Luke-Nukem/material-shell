@@ -99,16 +99,16 @@ var WorkspaceCategories = {
         primary: true
     },
     /*     other: {
-        icon: Gio.icon_new_for_string(
-            `${Me.path}/assets/icons/package-symbolic.svg`
-        ),
-        title: _('Others'),
-        categoriesIncluded: [],
-        categoriesExcluded: [],
-        acceptAll: false,
-        acceptOrphans: true,
-        primary: true
-    }, */
+      icon: Gio.icon_new_for_string(
+          `${Me.path}/assets/icons/package-symbolic.svg`
+      ),
+      title: _('Others'),
+      categoriesIncluded: [],
+      categoriesExcluded: [],
+      acceptAll: false,
+      acceptOrphans: true,
+      primary: true
+  }, */
     external: {
         icon: Gio.icon_new_for_string(
             `${Me.path}/assets/icons/package-symbolic.svg`

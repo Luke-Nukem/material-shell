@@ -6,14 +6,15 @@ const { WorkspaceCategories } = Me.imports.superWorkspace.workspaceCategories;
 
 /* exported AppsManager */
 var AppsManager = class AppsManager {
-    constructor() {}
+    constructor() {
+    }
 
     static getApps() {
         let usage = Shell.AppUsage.get_default();
         let appSystem = Shell.AppSystem.get_default();
         let appsInstalled = appSystem.get_installed().filter(appInfo => {
             try {
-                let id = appInfo.get_id(); // catch invalid file encodings
+                appInfo.get_id(); // catch invalid file encodings
             } catch (e) {
                 return false;
             }
@@ -64,11 +65,11 @@ var AppsManager = class AppsManager {
             let flagExcluded = false;
             appCategoriesList.forEach(appCategory => {
                 flagIncluded =
-                    flagIncluded ||
-                    category.categoriesIncluded.indexOf(appCategory) >= 0;
+            flagIncluded ||
+            category.categoriesIncluded.indexOf(appCategory) >= 0;
                 flagExcluded =
-                    flagExcluded ||
-                    category.categoriesExcluded.indexOf(appCategory) >= 0;
+            flagExcluded ||
+            category.categoriesExcluded.indexOf(appCategory) >= 0;
             });
             if (flagIncluded && !flagExcluded) {
                 categoryKeys.push(key);

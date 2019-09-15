@@ -27,9 +27,9 @@ var GridLayout = class GridLayout extends BaseGrabbableLayout {
                     workArea.x + i * width,
                     workArea.y + j * height,
                     width,
-                    index == windows.length - 1
+                    index === windows.length - 1
                         ? // If last window fill remaining space
-                          height * (columns * rows - index)
+                        height * (columns * rows - index)
                         : height,
                     true
                 );
