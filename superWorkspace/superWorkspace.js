@@ -4,7 +4,6 @@ const Main = imports.ui.main;
 const Background = imports.ui.background;
 
 const Me = imports.misc.extensionUtils.getCurrentExtension();
-const { MatButton } = Me.imports.widget.material.button;
 const { MaximizeLayout } = Me.imports.tilingManager.tilingLayouts.maximize;
 const TopPanel = Me.imports.widget.topPanelWidget.TopPanel;
 const { debounce } = Me.imports.utils.index;
@@ -26,7 +25,6 @@ var SuperWorkspace = class SuperWorkspace {
         monitor,
         visible
     ) {
-        this.panel = Main.panel;
         this.superWorkspaceManager = superWorkspaceManager;
         this.categoryKey = categoryKey;
         this.category = category;
@@ -74,25 +72,6 @@ var SuperWorkspace = class SuperWorkspace {
         });
 
         this.backgroundContainer.add_child(this.backgroundStackLayout);
-
-        this.tilingIcon = new St.Icon({
-            gicon: this.tilingLayout.icon,
-            style_class: 'workspace-icon'
-        });
-
-        this.tilingButton = new MatButton({
-            child: this.tilingIcon,
-            style_class: 'workspace-button',
-            reactive: true,
-            can_focus: true,
-            track_hover: true
-        });
-
-        this.tilingButton.connect('clicked', (actor, button) => {
-            // Go in reverse direction on right click (button: 3)
-            this.nextTiling(button === 3 ? -1 : 1);
-        });
-        this.panel._rightBox.insert_child_at_index(this.tilingButton, 0);
 
         this.windowFocused = null;
 
@@ -224,7 +203,7 @@ var SuperWorkspace = class SuperWorkspace {
             this.tilingLayout.constructor.key
         );
 
-        this.tilingIcon.gicon = this.tilingLayout.icon;
+        this.superWorkspaceManager.tilingIcon.gicon = this.tilingLayout.icon;
         this.tilingLayout.onTile();
     }
 

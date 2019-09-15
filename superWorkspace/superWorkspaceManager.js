@@ -1,9 +1,10 @@
-const { Shell, Meta } = imports.gi;
+const { Shell, Meta, St } = imports.gi;
 const Main = imports.ui.main;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { WorkspaceCategories } = Me.imports.superWorkspace.workspaceCategories;
 const { SuperWorkspace } = Me.imports.superWorkspace.superWorkspace;
 const { WorkspaceList } = Me.imports.widget.workspaceList;
+const { MatButton } = Me.imports.widget.material.button;
 
 /* exported SuperWorkspaceManager */
 var SuperWorkspaceManager = class SuperWorkspaceManager {
@@ -53,11 +54,31 @@ var SuperWorkspaceManager = class SuperWorkspaceManager {
         let activeSuperWorkspace = this.getActiveSuperWorkspace();
 
         activeSuperWorkspace.uiVisible = true;
-        activeSuperWorkspace.updateUI();
 
         this.workspaceList = new WorkspaceList(this);
         Main.panel._leftBox.insert_child_at_index(this.workspaceList, 1);
+
+        this.tilingIcon = new St.Icon({
+            gicon: this.getActiveSuperWorkspace().tilingLayout.icon,
+            style_class: 'workspace-icon'
+        });
+
+        this.tilingButton = new MatButton({
+            child: this.tilingIcon,
+            style_class: 'workspace-button',
+            reactive: true,
+            can_focus: true,
+            track_hover: true
+        });
+
+        this.tilingButton.connect('clicked', (actor, button) => {
+            // Go in reverse direction on right click (button: 3)
+            this.getActiveSuperWorkspace().nextTiling(button === 3 ? -1 : 1);
+        });
+        Main.panel._rightBox.insert_child_at_index(this.tilingButton, -1);
+
         this.dispatchExistingWindows();
+        activeSuperWorkspace.updateUI();
     }
 
     destroy() {
@@ -168,6 +189,7 @@ var SuperWorkspaceManager = class SuperWorkspaceManager {
         let activeSuperWorkspace = this.getActiveSuperWorkspace();
         activeSuperWorkspace.uiVisible = true;
         activeSuperWorkspace.updateUI();
+        //this.tilingIcon.gicon = this.getActiveSuperWorkspace().tilingLayout.icon;
     }
 
     getActiveSuperWorkspace() {

@@ -39,9 +39,6 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
     }
 
     enable() {
-        this.topBarSpacer = new St.Widget({ name: 'topBarSpacer' });
-        Main.layoutManager.panelBox.add_child(this.topBarSpacer);
-
         global.superWorkspaceManager = new SuperWorkspaceManager(
             AppsManager.groupAppsByCategory(AppsManager.getApps())
         );
@@ -96,6 +93,7 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
                     this.currentSuperWorkspace = newSuperWorkspace;
                     this.currentSuperWorkspace.uiVisible = true;
                     this.currentSuperWorkspace.updateUI();
+                    //this.workspaceManager.tilingIcon.gicon = this.currentSuperWorkspace.tilingLayout.icon;
                 }
             )
         });
