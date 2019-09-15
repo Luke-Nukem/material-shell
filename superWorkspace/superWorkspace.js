@@ -7,6 +7,7 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { MaximizeLayout } = Me.imports.tilingManager.tilingLayouts.maximize;
 const { debounce } = Me.imports.utils.index;
 const WindowUtils = Me.imports.utils.windows;
+const { CategorizedAppCard } = Me.imports.widget.categorizedAppCard;
 
 const { Stack } = Me.imports.widget.layout;
 
@@ -47,6 +48,27 @@ var SuperWorkspace = class SuperWorkspace {
             EMIT_DEBOUNCE_DELAY
         );
 
+        this.backgroundContainer = new St.Widget();
+
+        this.bgManager = new Background.BackgroundManager({
+            container: this.backgroundContainer,
+            monitorIndex: this.monitor.index,
+            vignette: false
+        });
+
+        this.categorizedAppCard = new CategorizedAppCard(this.category, apps);
+        this.backgroundStackLayout = new Stack({
+            x: monitor.x,
+            y: monitor.y,
+            width: monitor.width,
+            height: monitor.height,
+            // This St.Bin fix an Incredible Bug which the source is Unknown that make the AppCard to fill his parent when clicking on app icon SOMETIMES.
+            // Since the St.Bin take the size of the AppCard the bug is invisible...
+            children: [new St.Bin({ child: this.categorizedAppCard })]
+        });
+
+        this.backgroundContainer.add_child(this.backgroundStackLayout);
+
         this.windowFocused = null;
 
         this.focusEventId = global.display.connect(
@@ -79,12 +101,14 @@ var SuperWorkspace = class SuperWorkspace {
             'extension-loaded',
             this.handleExtensionLoaded.bind(this)
         );
+        Main.layoutManager._backgroundGroup.add_child(this.backgroundContainer);
         Main.layoutManager.uiGroup.add_child(this.frontendContainer);
         this.updateUI();
     }
 
     destroy() {
         if (this.frontendContainer) this.frontendContainer.destroy();
+        if (this.backgroundContainer) this.backgroundContainer.destroy();
         global.display.disconnect(this.focusEventId);
         global.display.disconnect(this.workAreaChangedId);
         Me.disconnect(this.loadedSignalId);
@@ -182,6 +206,7 @@ var SuperWorkspace = class SuperWorkspace {
 
     updateUI() {
         this.frontendContainer.visible = this.uiVisible;
+        this.backgroundContainer.visible = this.uiVisible;
     }
 
     emitWindowsChanged(newWindows, oldWindows, debouncedArgs) {
