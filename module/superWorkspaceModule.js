@@ -422,7 +422,7 @@ var SuperWorkspaceModule = class SuperWorkspaceModule {
             id: global.display.connect(
                 'window-left-monitor',
                 (display, monitorIndex, window) => {
-                    /* 
+                    /*
                     //Ignore unHandle window and window on primary screens
                     global.superWorkspaceManager.windowLeftMonitor(
                         window,

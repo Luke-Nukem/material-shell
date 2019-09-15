@@ -1,9 +1,10 @@
-const { Clutter, GLib, St } = imports.gi;
+const { Clutter, GLib, St, Meta } = imports.gi;
 const Signals = imports.signals;
 const Main = imports.ui.main;
 const Background = imports.ui.background;
 
 const Me = imports.misc.extensionUtils.getCurrentExtension();
+const { MatButton } = Me.imports.widget.material.button;
 const { MaximizeLayout } = Me.imports.tilingManager.tilingLayouts.maximize;
 const TopPanel = Me.imports.widget.topPanelWidget.TopPanel;
 const { debounce } = Me.imports.utils.index;
@@ -25,6 +26,7 @@ var SuperWorkspace = class SuperWorkspace {
         monitor,
         visible
     ) {
+        this.panel = Main.panel;
         this.superWorkspaceManager = superWorkspaceManager;
         this.categoryKey = categoryKey;
         this.category = category;
@@ -52,14 +54,6 @@ var SuperWorkspace = class SuperWorkspace {
             EMIT_DEBOUNCE_DELAY
         );
 
-        this.panel = new TopPanel(this);
-
-        if (this.monitor.index !== Main.layoutManager.primaryIndex) {
-            Main.layoutManager._trackActor(this.panel, {
-                affectsStruts: true
-            });
-        }
-
         this.backgroundContainer = new St.Widget();
 
         this.bgManager = new Background.BackgroundManager({
@@ -80,6 +74,25 @@ var SuperWorkspace = class SuperWorkspace {
         });
 
         this.backgroundContainer.add_child(this.backgroundStackLayout);
+
+        this.tilingIcon = new St.Icon({
+            gicon: this.tilingLayout.icon,
+            style_class: 'workspace-icon'
+        });
+
+        this.tilingButton = new MatButton({
+            child: this.tilingIcon,
+            style_class: 'workspace-button',
+            reactive: true,
+            can_focus: true,
+            track_hover: true
+        });
+
+        this.tilingButton.connect('clicked', (actor, button) => {
+            // Go in reverse direction on right click (button: 3)
+            this.nextTiling(button === 3 ? -1 : 1);
+        });
+        this.panel._rightBox.insert_child_at_index(this.tilingButton, 0);
 
         this.windowFocused = null;
 
@@ -109,20 +122,12 @@ var SuperWorkspace = class SuperWorkspace {
             }
         );
 
-        this.workAreaChangedId = global.display.connect(
-            'workareas-changed',
-            () => {
-                this.updateTopBarPositionAndSize();
-            }
-        );
         this.loadedSignalId = Me.connect(
             'extension-loaded',
             this.handleExtensionLoaded.bind(this)
         );
-        this.frontendContainer.add_child(this.panel);
         Main.layoutManager.uiGroup.add_child(this.frontendContainer);
         Main.layoutManager._backgroundGroup.add_child(this.backgroundContainer);
-        this.updateTopBarPositionAndSize();
         this.updateUI();
     }
 
@@ -134,21 +139,6 @@ var SuperWorkspace = class SuperWorkspace {
         Me.disconnect(this.loadedSignalId);
         this.tilingLayout.onDestroy();
         this.destroyed = true;
-    }
-
-    isTopBarVisible() {
-        return (
-            !global.display.get_monitor_in_fullscreen(this.monitor.index) &&
-            !Main.overview.visible
-        );
-    }
-
-    updateTopBarPositionAndSize() {
-        let workArea = Main.layoutManager.getWorkAreaForMonitor(
-            this.monitor.index
-        );
-        this.panel.set_position(workArea.x - this.monitor.x, 0);
-        this.panel.set_width(workArea.width);
     }
 
     addWindow(window) {
@@ -222,26 +212,6 @@ var SuperWorkspace = class SuperWorkspace {
         );
     }
 
-    setWindowBefore(windowToMove, windowRelative) {
-        const oldWindows = [...this.windows];
-        let windowToMoveIndex = this.windows.indexOf(windowToMove);
-        this.windows.splice(windowToMoveIndex, 1);
-
-        let windowRelativeIndex = this.windows.indexOf(windowRelative);
-        this.windows.splice(windowRelativeIndex, 0, windowToMove);
-        this.emitWindowsChanged(this.windows, oldWindows);
-    }
-
-    setWindowAfter(windowToMove, windowRelative) {
-        const oldWindows = [...this.windows];
-        let windowToMoveIndex = this.windows.indexOf(windowToMove);
-        this.windows.splice(windowToMoveIndex, 1);
-
-        let windowRelativeIndex = this.windows.indexOf(windowRelative);
-        this.windows.splice(windowRelativeIndex + 1, 0, windowToMove);
-        this.emitWindowsChanged(this.windows, oldWindows);
-    }
-
     nextTiling(direction) {
         this.tilingLayout.onDestroy();
         const Layout = global.tilingManager.getNextLayout(
@@ -254,26 +224,16 @@ var SuperWorkspace = class SuperWorkspace {
             this.tilingLayout.constructor.key
         );
 
-        this.panel.tilingIcon.gicon = this.tilingLayout.icon;
+        this.tilingIcon.gicon = this.tilingLayout.icon;
         this.tilingLayout.onTile();
-    }
-
-    shouldPanelBeVisible() {
-        let containFullscreenWindow = this.windows.some(metaWindow => {
-            return metaWindow.is_fullscreen();
-        });
-        return (
-            !containFullscreenWindow &&
-            (this.superWorkspaceManager && !this.superWorkspaceManager.noUImode)
-        );
     }
 
     updateUI() {
         this.frontendContainer.visible = this.uiVisible;
-        this.panel.visible = this.uiVisible && this.shouldPanelBeVisible();
         this.backgroundContainer.visible = this.uiVisible;
     }
 
+    // Used for adding app to workspace
     revealBackground() {
         this.windows.forEach(window => {
             window.minimize();

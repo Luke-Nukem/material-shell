@@ -4,6 +4,7 @@ const Main = imports.ui.main;
 
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { MatButton } = Me.imports.widget.material.button;
+const { ShellVersionMatch } = Me.imports.utils.compatibility;
 
 /* exported AppsButtonSubModule */
 var AppsButtonSubModule = class AppsButtonSubModule {
@@ -33,6 +34,12 @@ var AppsButtonSubModule = class AppsButtonSubModule {
     }
 
     enable() {
+      // 5- Hide the activities button
+        if (ShellVersionMatch('3.32')) {
+            this.panel.statusArea.activities.actor.hide();
+        } else {
+            this.panel.statusArea.activities.hide();
+        }
         this.panel._leftBox.insert_child_at_index(this.button, 0);
     }
 

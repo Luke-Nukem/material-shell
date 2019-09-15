@@ -6,7 +6,8 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const {
     DisableIncompatibleExtensionsModule
 } = Me.imports.module.disableIncompatibleExtensionsModule;
-const { LeftPanelModule } = Me.imports.module.leftPanel.leftPanelModule;
+const { AppsButtonSubModule } = Me.imports.module.appsButtonSubModule;
+const { HideDashModule } = Me.imports.module.hideDashModule;
 const { SuperWorkspaceModule } = Me.imports.module.superWorkspaceModule;
 const { HotKeysModule } = Me.imports.module.hotKeysModule;
 const { RequiredSettingsModule } = Me.imports.module.requiredSettingsModule;
@@ -27,8 +28,9 @@ function init() {
     disableIncompatibleExtensionsModule = new DisableIncompatibleExtensionsModule();
     modules = [
         new RequiredSettingsModule(),
-        new LeftPanelModule(),
         new TilingModule(),
+        new AppsButtonSubModule(Main.panel),
+        new HideDashModule(),
         new SuperWorkspaceModule(),
         new HotKeysModule()
     ];

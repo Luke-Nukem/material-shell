@@ -6,8 +6,45 @@ const DND = imports.ui.dnd;
 const Me = ExtensionUtils.getCurrentExtension();
 const { MatButton } = Me.imports.widget.material.button;
 const { WorkspaceCategories } = Me.imports.superWorkspace.workspaceCategories;
-const { DropPlaceholder } = Me.imports.widget.taskBar;
 const { ShellVersionMatch } = Me.imports.utils.compatibility;
+
+var DropPlaceholder = GObject.registerClass(
+    {
+        Signals: {
+            'drag-dropped': {},
+            'drag-over': {}
+        }
+    },
+    class DropPlaceholder extends St.Widget {
+        _init(targetClass) {
+            super._init();
+            this.targetClass = targetClass;
+            this.set_style('background:rgba(255,255,255,0.1)');
+            this._delegate = this;
+        }
+
+        handleDragOver(source) {
+            if (!(source instanceof this.targetClass)) {
+                return DND.DragMotionResult.NO_DROP;
+            }
+            this.emit('drag-over');
+            return DND.DragMotionResult.MOVE_DROP;
+        }
+
+        acceptDrop(source) {
+            if (!(source instanceof this.targetClass)) {
+                return false;
+            }
+            this.emit('drag-dropped');
+            return true;
+        }
+
+        resize(rect) {
+            this.width = rect.width;
+            this.height = rect.height;
+        }
+    }
+);
 
 /* exported WorkspaceList */
 var WorkspaceList = GObject.registerClass(
@@ -20,7 +57,7 @@ var WorkspaceList = GObject.registerClass(
             this.superWorkspaceManager = superWorkspaceManager;
 
             this.buttonList = new St.BoxLayout({
-                vertical: true
+                vertical: false
             });
 
             this.connect('destroy', this._onDestroy.bind(this));
@@ -210,8 +247,8 @@ var WorkspaceList = GObject.registerClass(
 
             if (ShellVersionMatch('3.32')) {
                 Tweener.addTween(this.workspaceActiveIndicator, {
-                    translation_y:
-                        48 *
+                    translation_x:
+                        40 *
                         scaleFactor *
                         this.superWorkspaceManager.categoryKeyOrderedList.indexOf(
                             categoryKey
@@ -221,8 +258,8 @@ var WorkspaceList = GObject.registerClass(
                 });
             } else {
                 this.workspaceActiveIndicator.ease({
-                    translation_y:
-                        48 *
+                    translation_x:
+                        40 *
                         scaleFactor *
                         this.superWorkspaceManager.categoryKeyOrderedList.indexOf(
                             categoryKey

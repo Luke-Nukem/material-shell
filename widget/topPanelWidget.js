@@ -3,8 +3,7 @@ const { GObject, St, Clutter, Gio } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const { MatButton } = Me.imports.widget.material.button;
-
-const { TaskBar } = Me.imports.widget.taskBar;
+const { WorkspaceList } = Me.imports.widget.workspaceList;
 
 /* exported TopPanel */
 var TopPanel = GObject.registerClass(
@@ -13,12 +12,10 @@ var TopPanel = GObject.registerClass(
             super._init({
                 name: 'topPanel'
             });
+
             this._delegate = this;
             this.superWorkspace = superWorkspace;
             this._leftContainer = new St.BoxLayout();
-
-            this.taskBar = new TaskBar(superWorkspace);
-            this._leftContainer.add_child(this.taskBar);
 
             let iconContainer = new St.Bin({
                 child: new St.Icon({
@@ -40,6 +37,7 @@ var TopPanel = GObject.registerClass(
 
             this._leftContainer.add_child(this.addButton);
             this.add_child(this._leftContainer);
+
             this.tilingIcon = new St.Icon({
                 gicon: superWorkspace.tilingLayout.icon,
                 style_class: 'workspace-icon'
@@ -59,15 +57,6 @@ var TopPanel = GObject.registerClass(
             });
 
             this.add_child(this.tilingButton);
-        }
-
-        handleDragOver() {
-            return this.taskBar.updateCurrentTaskBar();
-        }
-
-        acceptDrop() {
-            this.taskBar.reparentDragItem();
-            return true;
         }
 
         vfunc_allocate(box, flags) {
