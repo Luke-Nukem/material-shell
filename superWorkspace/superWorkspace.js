@@ -184,49 +184,6 @@ var SuperWorkspace = class SuperWorkspace {
         this.frontendContainer.visible = this.uiVisible;
     }
 
-    // Used for adding app to workspace
-    revealBackground() {
-        this.windows.forEach(window => {
-            window.minimize();
-        });
-        this.backgroundShown = true;
-
-        global.stage.set_key_focus(this.categorizedAppCard);
-        this.backgroundSignals = [];
-        let signalId = global.stage.connect('notify::key-focus', () => {
-            let focus = global.stage.get_key_focus();
-            if (focus !== this.categorizedAppCard) {
-                this.unRevealBackground();
-            }
-        });
-        this.backgroundSignals.push({ from: global.stage, id: signalId });
-        signalId = this.categorizedAppCard.connect(
-            'key-press-event',
-            (_, event) => {
-                if (event.get_key_symbol() === Clutter.KEY_Escape) {
-                    this.unRevealBackground();
-                }
-
-                return Clutter.EVENT_PROPAGATE;
-            }
-        );
-        this.backgroundSignals.push({
-            from: this.categorizedAppCard,
-            id: signalId
-        });
-    }
-
-    unRevealBackground() {
-        this.windows.forEach(window => {
-            window.unminimize();
-        });
-        this.backgroundSignals.forEach(signal => {
-            signal.from.disconnect(signal.id);
-        });
-        this.backgroundSignals = [];
-        this.backgroundShown = false;
-    }
-
     emitWindowsChanged(newWindows, oldWindows, debouncedArgs) {
     // In case of direct call check if it has _debouncedArgs
         if (debouncedArgs) {
@@ -255,11 +212,6 @@ var SuperWorkspace = class SuperWorkspace {
                 this.emit('windows-changed', newWindows, oldWindows);
             }
         }
-    }
-
-    setApps(apps) {
-        this.apps = apps;
-        this.categorizedAppCard._loadApps(apps);
     }
 
     isDisplayed() {

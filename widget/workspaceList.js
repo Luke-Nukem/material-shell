@@ -68,13 +68,6 @@ var WorkspaceList = GObject.registerClass(
             this.dropPlaceholder.connect('drag-over', () => {
                 this.tempDragData.draggedOverByChild = true;
             });
-            this.workspaceActiveIndicator = new St.Widget({
-                style_class: 'workspace-active-indicator'
-            });
-
-            this.workspaceActiveIndicator.add_style_class_name('primary-bg');
-
-            this.add_child(this.workspaceActiveIndicator);
 
             for (let categoryKey of this.superWorkspaceManager.categoryKeyOrderedList) {
                 let category = WorkspaceCategories[categoryKey];
@@ -97,7 +90,6 @@ var WorkspaceList = GObject.registerClass(
                         this.dropPlaceholder,
                         workspaceButtonIndex
                     );
-                    this.workspaceActiveIndicator.hide();
                 });
 
                 workspaceButton._draggable.connect('drag-cancelled', () => {
@@ -194,7 +186,6 @@ var WorkspaceList = GObject.registerClass(
                     this.tempDragData.initialIndex
                 );
             }
-            this.workspaceActiveIndicator.show();
             delete this.tempDragData;
         }
 
@@ -239,30 +230,6 @@ var WorkspaceList = GObject.registerClass(
             this.buttonActive.actorContainer.add_style_class_name('active');
             let scaleFactor = St.ThemeContext.get_for_stage(
                 global.stage).scale_factor;
-
-            if (ShellVersionMatch('3.32')) {
-                Tweener.addTween(this.workspaceActiveIndicator, {
-                    translation_x:
-                40 *
-                scaleFactor *
-                this.superWorkspaceManager.categoryKeyOrderedList.indexOf(
-                    categoryKey
-                ),
-                    time: 0.25,
-                    transition: 'easeOutQuad'
-                });
-            } else {
-                this.workspaceActiveIndicator.ease({
-                    translation_x:
-                40 *
-                scaleFactor *
-                this.superWorkspaceManager.categoryKeyOrderedList.indexOf(
-                    categoryKey
-                ),
-                    duration: 250,
-                    mode: Clutter.AnimationMode.EASE_OUT_QUAD
-                });
-            }
         }
 
         getButtonFromCategoryKey(categoryKey) {

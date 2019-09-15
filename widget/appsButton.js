@@ -6,8 +6,8 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const { MatButton } = Me.imports.widget.button;
 const { ShellVersionMatch } = Me.imports.utils.compatibility;
 
-/* exported AppsButtonSubModule */
-var AppsButtonSubModule = class AppsButtonSubModule {
+/* exported AppsButton */
+var AppsButton = class AppsButtonSubModule {
     constructor(panel) {
         this.panel = panel;
         let icon = new St.Icon({
@@ -19,7 +19,7 @@ var AppsButtonSubModule = class AppsButtonSubModule {
 
         this.button = new MatButton({
             child: icon,
-            style_class: 'workspace-button',
+            style_class: 'app-button',
         });
 
         this.button.connect('clicked', () => {
